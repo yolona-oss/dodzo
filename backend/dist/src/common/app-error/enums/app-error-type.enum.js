@@ -1,0 +1,31 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppErrorTypeEnum = void 0;
+var AppErrorTypeEnum;
+(function (AppErrorTypeEnum) {
+    AppErrorTypeEnum[AppErrorTypeEnum["BAD_REQUEST"] = 400] = "BAD_REQUEST";
+    AppErrorTypeEnum[AppErrorTypeEnum["DB_CANNOT_READ"] = 401] = "DB_CANNOT_READ";
+    AppErrorTypeEnum[AppErrorTypeEnum["DB_CANNOT_CREATE"] = 402] = "DB_CANNOT_CREATE";
+    AppErrorTypeEnum[AppErrorTypeEnum["DB_CANNOT_DELETE"] = 403] = "DB_CANNOT_DELETE";
+    AppErrorTypeEnum[AppErrorTypeEnum["DB_CANNOT_UPDATE"] = 404] = "DB_CANNOT_UPDATE";
+    AppErrorTypeEnum[AppErrorTypeEnum["DB_ENTITY_EXISTS"] = 405] = "DB_ENTITY_EXISTS";
+    AppErrorTypeEnum[AppErrorTypeEnum["DB_ENTITY_NOT_FOUND"] = 406] = "DB_ENTITY_NOT_FOUND";
+    AppErrorTypeEnum[AppErrorTypeEnum["DB_NOTHING_TO_UPDATE"] = 407] = "DB_NOTHING_TO_UPDATE";
+    AppErrorTypeEnum[AppErrorTypeEnum["INVALID_DATA"] = 408] = "INVALID_DATA";
+    AppErrorTypeEnum[AppErrorTypeEnum["INVALID_OBJECT_ID"] = 409] = "INVALID_OBJECT_ID";
+    AppErrorTypeEnum[AppErrorTypeEnum["INVALID_RANGE"] = 410] = "INVALID_RANGE";
+    AppErrorTypeEnum[AppErrorTypeEnum["DUPLICATE_KEY"] = 411] = "DUPLICATE_KEY";
+    AppErrorTypeEnum[AppErrorTypeEnum["VALIDATION_ERROR"] = 412] = "VALIDATION_ERROR";
+    AppErrorTypeEnum[AppErrorTypeEnum["INVALID_ORDER_STATUS"] = 413] = "INVALID_ORDER_STATUS";
+    AppErrorTypeEnum[AppErrorTypeEnum["DB_INCORRECT_MODEL"] = 414] = "DB_INCORRECT_MODEL";
+    AppErrorTypeEnum[AppErrorTypeEnum["CANNOT_UPLOAD_IMAGE"] = 415] = "CANNOT_UPLOAD_IMAGE";
+    AppErrorTypeEnum[AppErrorTypeEnum["IMAGE_NOT_UPLOADED"] = 416] = "IMAGE_NOT_UPLOADED";
+    AppErrorTypeEnum[AppErrorTypeEnum["CLOUDINARY_ERROR"] = 417] = "CLOUDINARY_ERROR";
+    AppErrorTypeEnum[AppErrorTypeEnum["ROLE_ALREADY_PROVIDED"] = 418] = "ROLE_ALREADY_PROVIDED";
+    AppErrorTypeEnum[AppErrorTypeEnum["INSUFFICIENT_USER_PASSWORD_LENGTH"] = 419] = "INSUFFICIENT_USER_PASSWORD_LENGTH";
+    AppErrorTypeEnum[AppErrorTypeEnum["INSUFFICIENT_USER_PASSWORD_ENTROPY"] = 420] = "INSUFFICIENT_USER_PASSWORD_ENTROPY";
+    AppErrorTypeEnum[AppErrorTypeEnum["INVALID_CREDENTIALS_EXCEPTION"] = 421] = "INVALID_CREDENTIALS_EXCEPTION";
+    AppErrorTypeEnum[AppErrorTypeEnum["ROLE_NOT_PROVIDED"] = 422] = "ROLE_NOT_PROVIDED";
+    AppErrorTypeEnum[AppErrorTypeEnum["NO_PAYLOAD_PROVIDED"] = 423] = "NO_PAYLOAD_PROVIDED";
+})(AppErrorTypeEnum = exports.AppErrorTypeEnum || (exports.AppErrorTypeEnum = {}));
+//# sourceMappingURL=app-error-type.enum.js.map

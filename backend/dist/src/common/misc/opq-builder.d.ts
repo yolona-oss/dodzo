@@ -1,0 +1,32 @@
+import { IBuilder } from "./../types/builder.type";
+type OPQBuilderFinalizeType = Record<string, any>;
+type TransformFn = (value: any) => any;
+type ValidateFn = (value: any) => boolean;
+export declare class OPQBuilder implements IBuilder<OPQBuilderFinalizeType> {
+    private options;
+    private globalValidators;
+    private validators;
+    private globalChecks;
+    private checks;
+    private useGlobalValidationForMapped;
+    private useGlobalCheckForMapped;
+    private mustHaveKeys;
+    constructor();
+    from(target: object, allowOverwrite?: boolean): this;
+    setUseGlobalCheckForMapped(use?: boolean): this;
+    setUseGlobalValidationForMapped(use?: boolean): this;
+    addMustHaveKey(key: string): this;
+    addCheckOptionForKey(key: string, fn: ValidateFn): this;
+    addValidatorForKey(key: string, fn: ValidateFn): this;
+    addGlobalCheck(fn: ValidateFn): this;
+    addGlobalValidator(fn: ValidateFn): this;
+    addToQuery(key: string, value: any, transform?: TransformFn): this;
+    clearGlobalChecks(): this;
+    clearGlobalValidators(): this;
+    clearMappedValidators(): this;
+    clearOptions(): this;
+    clearMustHaveKeys(): this;
+    build(): OPQBuilderFinalizeType;
+    private createDefaultCheck;
+}
+export {};

@@ -1,4 +1,4 @@
-import { ProductEntity } from './../../products/schemas/products.schema';
+import { ProductEntity } from './../../../menu/products/schemes/products.schema';
 
 export interface PopulateProductInterface {
     products: {

@@ -10,6 +10,8 @@ export type ProductDocument = ProductEntity & Document;
     timestamps: true
 })
 export class ProductEntity {
+    _id: string
+
     @Prop({type: String, required: true})
     title: string;
 

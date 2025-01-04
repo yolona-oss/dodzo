@@ -16,18 +16,20 @@ import { ImageUploadService } from './image-upload.service';
 
 import { AppError, AppErrorTypeEnum } from './../app-error';
 import { ParseObjectIdPipe } from './../pipes/parse-object-id.pipe';
-import { generateRandom } from './../misc/utils';
+import { generateRandom, normalizeName } from './../misc/utils';
 
 @Controller('image-upload')
 export class ImageUploadController {
 
-    constructor(private readonly imageUploadService: ImageUploadService) {}
+    constructor(
+        private readonly imageUploadService: ImageUploadService
+    ) {}
 
     @Post('upload')
     @UseInterceptors(FilesInterceptor("images", 20, { // TODO create constants
         storage: diskStorage({
             destination: (_, __, cb) => cb(null, './uploads'),
-            filename: (_, file, cb) => cb(null, `${generateRandom()}_${file.originalname}`)
+            filename: (_, file, cb) => cb(null, `${generateRandom()}_${normalizeName(file.originalname)}`)
         })
     }))
     async upload(

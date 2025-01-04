@@ -47,7 +47,6 @@ let JwtGuard = class JwtGuard extends (0, passport_1.AuthGuard)('strategy-jwt') 
         catch {
             throw new common_1.UnauthorizedException("Invalid authentication token.");
         }
-        return true;
     }
     extractTokenFromHeader(request) {
         const [type, token] = request.headers.authorization?.split(' ') ?? [];

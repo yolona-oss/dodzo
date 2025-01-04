@@ -17,11 +17,6 @@ exports.default = () => ({
         connection_string: process.env.DATABASE_CONNECTION_STRING,
         name: process.env.DATABASE_NAME,
     },
-    cloudinary: {
-        resolve_name: process.env.CLOUDINARY_CONFIG_CLOUD_NAME,
-        api_key: process.env.CLOUDINARY_CONFIG_API_KEY,
-        api_secret: process.env.CLOUDINARY_CONFIG_API_SECRET
-    },
     jwt: {
         access_token: {
             secret: process.env.JWT_TOKEN_SECRET_KEY,
@@ -35,9 +30,6 @@ exports.default = () => ({
                 expires_in: process.env.JWT_REFRESH_TOKEN_OPTION_EXPIRES_IN
             },
         }
-    },
-    static_data_storage: {
-        cities_file: `${process.env.npm_config_local_prefix}/${process.env.DATABASE_CITIES_FILE}`
     },
     default_user: {
         name: process.env.DEFAULT_USER_NAME,

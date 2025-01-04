@@ -1,4 +1,4 @@
-export interface FilteringOutput<T> {
+export interface LimitedOutput<T> {
     data: T[],
     limit: number,
     offset: number

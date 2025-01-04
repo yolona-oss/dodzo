@@ -43,7 +43,7 @@ export declare class AuthService {
     private generateTokens;
     generageResetToken(userId: string): Promise<string>;
     refreshAccessToken(cookies: any): Promise<IAccessToken>;
-    validateUser(email: string, pass: string): Promise<import("mongoose").Document<unknown, {}, import("../users/schemas/user.schema").UserDocument> & import("../users/schemas/user.schema").UserEntity & import("mongoose").Document<unknown, any, any> & Required<{
+    validateUser(email: string, pass: string): Promise<import("mongoose").Document<unknown, {}, import("../users/schemes/users.schema").UserDocument> & import("../users/schemes/users.schema").UserEntity & import("mongoose").Document<unknown, any, any> & Required<{
         _id: unknown;
     }>>;
 }

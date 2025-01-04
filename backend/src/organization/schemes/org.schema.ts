@@ -3,9 +3,8 @@ import mongoose, { Document } from 'mongoose';
 
 import { WeekDays } from 'common/types/week.type';
 import { ISchedule } from 'common/types/schedule.type';
-import { Address } from 'cluster';
 
-export type OrganizationDocument = OrganizationEntity & Document;
+export type OrgDocument = OrgEntity & Document;
 
 const WeekSubSchema = new mongoose.Schema({
     value: { type: String, enum: WeekDays, required: true }
@@ -16,7 +15,7 @@ const WeekSubSchema = new mongoose.Schema({
         virtuals: true,
     }
 })
-export class OrganizationEntity {
+export class OrgEntity {
     @Prop({ type: String, required: true, unique: true })
     label: string;
 
@@ -34,3 +33,5 @@ export class OrganizationEntity {
     }, required: true})
     schedule: ISchedule
 }
+
+export const OrgSchema = SchemaFactory.createForClass(OrgEntity);

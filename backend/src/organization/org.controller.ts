@@ -1,14 +1,14 @@
 import { Controller, Get, Put, Query, Res, Delete, Body, Post } from '@nestjs/common';
 import { Response } from 'express';
-import { ParseObjectIdPipe } from './../../common/pipes/parse-object-id.pipe';
+import { ParseObjectIdPipe } from './../common/pipes/parse-object-id.pipe';
 import { CreateOrgDto } from './dto/create-org.dto';
 
-import { OrganizationService } from './organization.service';
+import { OrgService } from './org.service';
 
 @Controller()
-export class OrganizationController {
+export class OrgController {
     constructor(
-        private readonly organizationService: OrganizationService
+        private readonly orgService: OrgService
     ) {}
 
     @Get('/')
@@ -17,13 +17,13 @@ export class OrganizationController {
         @Res() res: Response
     ) {
         if (query.id) {
-            const doc = await this.organizationService.findById(query.id)
+            const doc = await this.orgService.findById(query.id)
             res.status(200).json(doc)
         } else if (query.name) {
-            const doc = await this.organizationService.findByName(query.name)
+            const doc = await this.orgService.findByName(query.name)
             res.status(200).json(doc)
         } else {
-            const docs = await this.organizationService.findAll()
+            const docs = await this.orgService.findAll()
             res.status(200).json(docs)
         }
     }
@@ -33,7 +33,7 @@ export class OrganizationController {
         @Body() createOrgDto: CreateOrgDto,
         @Res() res: Response
     ) {
-        const doc = await this.organizationService.create(createOrgDto)
+        const doc = await this.orgService.create(createOrgDto)
         res.status(201).json(doc)
     }
 
@@ -42,7 +42,7 @@ export class OrganizationController {
         @Query('id') id: string,
         @Res() res: Response
     ) {
-        const doc = await this.organizationService.remove(id)
+        const doc = await this.orgService.remove(id)
         res.status(200).json(doc)
     }
 
@@ -56,7 +56,7 @@ export class OrganizationController {
         },
         @Res() res: Response
     ) {
-        const doc = await this.organizationService.changeAddress(id, address)
+        const doc = await this.orgService.changeAddress(id, address)
         res.status(200).json(doc)
     }
 

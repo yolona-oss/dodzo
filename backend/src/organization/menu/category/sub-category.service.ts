@@ -3,14 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { SubCategoryDocument } from './schemas/sub-category.schema';
 
-import { CRUDService } from './../../common/misc/crud-service';
-import { OPQBuilder } from './../../common/misc/opq-builder';
-import { AppError, AppErrorTypeEnum } from './../../common/app-error';
+import { CRUDService } from './../../../common/misc/crud-service';
+import { OPQBuilder } from './../../../common/misc/opq-builder';
+import { AppError, AppErrorTypeEnum } from './../../../common/app-error';
 
 import { FilteringSubCategoryOptions } from './interfaces/filtring-sub-category-options.interface';
-import { FiltredSubCategoryList } from './interfaces/filtred-sub-category.interface';
 import { CategoryDocument } from './schemas/category.schema';
 
+import { LimitedOutput } from '../../../common/interfaces/limited-output.interface';
 
 @Injectable()
 export class SubCategoryService extends CRUDService<SubCategoryDocument> {
@@ -23,7 +23,7 @@ export class SubCategoryService extends CRUDService<SubCategoryDocument> {
         super(subCategoryModel)
     }
 
-    async findFiltredWrapper(opts: FilteringSubCategoryOptions): Promise<FiltredSubCategoryList> {
+    async findFiltredWrapper(opts: FilteringSubCategoryOptions): Promise<LimitedOutput<SubCategoryDocument>> {
         const page: number = opts.page ? parseInt(opts.page) : 1
         const perPage = opts.perPage ? parseInt(opts.perPage) : undefined
 
@@ -32,9 +32,9 @@ export class SubCategoryService extends CRUDService<SubCategoryDocument> {
 
         if (totalDocuments === 0) {
             return {
-                subCategoryList: [],
-                totalPages: 0,
-                page: 0
+                data: [],
+                offset: 0,
+                limit: 0
             }
         }
 
@@ -60,9 +60,9 @@ export class SubCategoryService extends CRUDService<SubCategoryDocument> {
         }
 
         return {
-            subCategoryList: docs,
-            totalPages: totalPages,
-            page: page
+            data: docs,
+            limit: totalPages,
+            offset: page
         }
     }
 

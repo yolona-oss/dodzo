@@ -1,7 +1,7 @@
 import { RouterModule } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ImageUploadModule } from './../../image-upload/image-upload.module';
+import { ImageUploadModule } from './../../../common/image-upload/image-upload.module';
 import { CategoryModule } from './../category/category.module';
 import { CategorySchema } from './../category/schemas/category.schema';
 import { SubCategorySchema } from './../category/schemas/sub-category.schema';
@@ -23,7 +23,7 @@ import { ProductsService } from './products.service';
                 module: ProductsModule,
             }
         ]),
-        ProductReviewsModule,
+        ReviewsModule,
         CategoryModule,
         ImageUploadModule,
     ],

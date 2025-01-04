@@ -12,10 +12,10 @@ import {
 import mongoose from 'mongoose';
 import { Response } from 'express'
 
-import { ParseObjectIdPipe } from './../../common/pipes/parse-object-id.pipe';
+import { ParseObjectIdPipe } from './../../../common/pipes/parse-object-id.pipe';
 import { CategoryService } from './category.service';
 
-import { AppError, AppErrorTypeEnum } from './../../common/app-error';
+import { AppError, AppErrorTypeEnum } from './../../../common/app-error';
 
 //import { Public } from './../../common/decorators/public.decorotor';
 

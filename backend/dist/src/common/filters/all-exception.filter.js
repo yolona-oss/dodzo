@@ -9,11 +9,12 @@ let AllExeptionFilter = class AllExeptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();
         if (exception instanceof app_error_1.AppError) {
+            const { errorCode, errorMessage, userMessage, httpStatus } = exception;
             return response.status(exception.httpStatus).json({
-                errorCode: exception.errorCode,
-                errorMsg: exception.errorMessage,
-                usrMsg: exception.userMessage,
-                httpCode: exception.httpStatus,
+                errorCode,
+                errorMessage,
+                userMessage,
+                httpStatus
             });
         }
         else if (exception instanceof common_1.UnauthorizedException) {

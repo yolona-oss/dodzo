@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 
-import { OrderStatus } from './../../../common/enums/order-status.enum';
+import { OrderStatus } from './../../../../common/enums/order-status.enum';
 
 export type OrdersDocument = OrdersEntity & Document;
 

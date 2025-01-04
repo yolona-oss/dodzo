@@ -1,5 +1,5 @@
 export interface FilteringOutput<T> {
-    documents: T[];
-    totalPages: number;
-    page: number;
+    data: T[];
+    limit: number;
+    offset: number;
 }

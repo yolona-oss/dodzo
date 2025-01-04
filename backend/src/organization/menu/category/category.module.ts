@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ImageUploadModule } from './../../image-upload/image-upload.module';
+import { ImageUploadModule } from './../../../common/image-upload/image-upload.module';
 import { CategoryController } from './category.controller';
 import { CategorySchema } from './schemas/category.schema';
 import { CategoryService } from './category.service';

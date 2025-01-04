@@ -1,13 +1,13 @@
 import mongoose, { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserEntity, UserDocument } from './schemas/user.schema';
+import { UserEntity, UserDocument } from './schemes/users.schema';
 import { DeepPartial } from './../common/types/deep-partial.type';
 import { Role } from './../common/enums/role.enum';
-import { WishlistService } from '../market/wishlist/wishlist.service';
-import { CartService } from '../market/cart/cart.service';
-import { OrdersService } from '../market/orders/orders.service';
-import { ImageUploadService } from './../image-upload/image-upload.service';
-import { ImagesEntity } from './../image-upload/schemas/image-upload.schema';
+import { WishlistService } from '../organization/customers/wishlist/wishlist.service';
+import { CartService } from '../organization/customers/cart/cart.service';
+import { OrdersService } from '../organization/customers/orders/orders.service';
+import { ImageUploadService } from './../common/image-upload/image-upload.service';
+import { ImagesEntity } from './../common/image-upload/schemas/image-upload.schema';
 import { UpdateUserDto } from './dto/update-user.dto';
 export declare class UsersService {
     private readonly usersModel;
@@ -62,7 +62,6 @@ export declare class UsersService {
         _id: unknown;
     }>>;
     removeRole(id: string, role: Role): Promise<void>;
-    __createDefaultAdmin(user: CreateUserDto): Promise<void>;
     private checkPasswordStrenth;
     private preCreate;
     private preRemove;
@@ -71,4 +70,5 @@ export declare class UsersService {
     private _removeWishlist;
     private _removeCart;
     private _removeOrders;
+    __createDefaultAdmin(user: CreateUserDto): Promise<void>;
 }

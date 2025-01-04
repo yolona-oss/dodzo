@@ -15,12 +15,6 @@ export interface ConfigSchema {
         connection_string: string,
         name: string;
     },
-    cloudinary: {
-        resolve_name: string,
-        api_key: string,
-        api_secret: string,
-
-    },
     jwt: {
         access_token: {
             secret: string,
@@ -34,9 +28,6 @@ export interface ConfigSchema {
                 expires_in: string
             }
         }
-    },
-    static_data_storage: {
-        cities_file: string
     },
     default_user: {
         name: string,
@@ -56,11 +47,6 @@ export default (): ConfigSchema => ({
         connection_string: <string>process.env.DATABASE_CONNECTION_STRING,
         name: <string>process.env.DATABASE_NAME,
     },
-    cloudinary: {
-        resolve_name: <string>process.env.CLOUDINARY_CONFIG_CLOUD_NAME,
-        api_key: <string>process.env.CLOUDINARY_CONFIG_API_KEY,
-        api_secret: <string>process.env.CLOUDINARY_CONFIG_API_SECRET
-    },
     jwt: {
         access_token: {
             secret: <string>process.env.JWT_TOKEN_SECRET_KEY,
@@ -74,9 +60,6 @@ export default (): ConfigSchema => ({
                 expires_in: <string>process.env.JWT_REFRESH_TOKEN_OPTION_EXPIRES_IN
             },
         }
-    },
-    static_data_storage: {
-        cities_file: `${process.env.npm_config_local_prefix}/${process.env.DATABASE_CITIES_FILE}`
     },
     default_user: {
         name: <string>process.env.DEFAULT_USER_NAME,

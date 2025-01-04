@@ -4,11 +4,6 @@ export interface ConfigSchema {
         connection_string: string;
         name: string;
     };
-    cloudinary: {
-        resolve_name: string;
-        api_key: string;
-        api_secret: string;
-    };
     jwt: {
         access_token: {
             secret: string;
@@ -22,9 +17,6 @@ export interface ConfigSchema {
                 expires_in: string;
             };
         };
-    };
-    static_data_storage: {
-        cities_file: string;
     };
     default_user: {
         name: string;

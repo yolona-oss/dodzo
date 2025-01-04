@@ -12,7 +12,7 @@ import { WishlistService } from './wishlist/wishlist.service';
 export class CustomersService {
     constructor(
         @InjectModel('Customer')
-        private readonly customerModel: Model<CustomerEntity>
+        private readonly customerModel: Model<CustomerEntity>,
         private readonly cartService: CartService,
         private readonly wishlistService: WishlistService
     ) {}

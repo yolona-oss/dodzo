@@ -5,8 +5,8 @@ declare enum AlphabetOrderType {
     SpecialCharacter = 3
 }
 declare const CryptoService: {
-    createPasswordHash: (password: string) => string;
-    comparePasswords: (password: string, hash: string) => boolean;
+    createPasswordHash: (plain: string) => string;
+    comparePasswords: (plain: string, hash: string) => boolean;
     createResetToken: () => {
         resetTokenValue: string;
         resetTokenSecret: string;

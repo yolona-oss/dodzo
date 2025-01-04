@@ -1,5 +1,5 @@
 export declare const corsOptions: {
-    origin: string;
+    origin: (origin: any, callback: any) => void;
     credentials: boolean;
     exposedHeaders: string[];
 };

@@ -9,10 +9,10 @@ const app_error_1 = require("./../common/app-error");
 const crypto_service_1 = tslib_1.__importDefault(require("./../auth/crypto-service"));
 const constants_1 = require("./../common/constants");
 const role_enum_1 = require("./../common/enums/role.enum");
-const wishlist_service_1 = require("../market/wishlist/wishlist.service");
-const cart_service_1 = require("../market/cart/cart.service");
-const orders_service_1 = require("../market/orders/orders.service");
-const image_upload_service_1 = require("./../image-upload/image-upload.service");
+const wishlist_service_1 = require("../organization/customers/wishlist/wishlist.service");
+const cart_service_1 = require("../organization/customers/cart/cart.service");
+const orders_service_1 = require("../organization/customers/orders/orders.service");
+const image_upload_service_1 = require("./../common/image-upload/image-upload.service");
 let UsersService = class UsersService {
     constructor(usersModel, wishlistService, cartService, ordersService, imagesService) {
         this.usersModel = usersModel;
@@ -235,32 +235,6 @@ let UsersService = class UsersService {
             throw new app_error_1.AppError(app_error_1.AppErrorTypeEnum.ROLE_NOT_PROVIDED);
         }
     }
-    async __createDefaultAdmin(user) {
-        const defaultUser = await this.findByEmail(user.email);
-        if (!defaultUser) {
-            try {
-                const initUser = await this.usersModel.create({
-                    ...user,
-                    password: crypto_service_1.default.createPasswordHash(user.password),
-                    roles: [role_enum_1.Role.Admin]
-                });
-                const pre = await this.preCreate(initUser.id);
-                await this.usersModel.findByIdAndUpdate(initUser.id, {
-                    $set: {
-                        wishlist: pre.wishlist,
-                        cart: pre.cart
-                    }
-                }, { new: true });
-            }
-            catch (e) {
-                console.error(e);
-                throw new app_error_1.AppError(app_error_1.AppErrorTypeEnum.DB_CANNOT_CREATE, {
-                    errorMessage: "Cannot create default admin",
-                    userMessage: "Cannot create default admin"
-                });
-            }
-        }
-    }
     checkPasswordStrenth(password) {
         if (password.length < constants_1.MIN_USER_PASSWORD_LENGTH) {
             throw new app_error_1.AppError(app_error_1.AppErrorTypeEnum.INSUFFICIENT_USER_PASSWORD_LENGTH, {
@@ -308,6 +282,38 @@ let UsersService = class UsersService {
     }
     async _removeOrders(id) {
         return await this.ordersService.removeUserOrders(id);
+    }
+    async __createDefaultAdmin(user) {
+        let defaultUser;
+        try {
+            defaultUser = await this.findByEmail(user.email);
+        }
+        catch (e) {
+            defaultUser = null;
+        }
+        if (!defaultUser) {
+            try {
+                const initUser = await this.usersModel.create({
+                    ...user,
+                    password: crypto_service_1.default.createPasswordHash(user.password),
+                    roles: [role_enum_1.Role.Admin]
+                });
+                const pre = await this.preCreate(initUser.id);
+                await this.usersModel.findByIdAndUpdate(initUser.id, {
+                    $set: {
+                        wishlist: pre.wishlist,
+                        cart: pre.cart
+                    }
+                }, { new: true });
+            }
+            catch (e) {
+                console.error(e);
+                throw new app_error_1.AppError(app_error_1.AppErrorTypeEnum.DB_CANNOT_CREATE, {
+                    errorMessage: "Cannot create default admin",
+                    userMessage: "Cannot create default admin"
+                });
+            }
+        }
     }
 };
 UsersService = tslib_1.__decorate([

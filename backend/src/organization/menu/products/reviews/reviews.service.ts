@@ -5,12 +5,12 @@ import { Injectable } from '@nestjs/common';
 import { ReviewsDocument } from './schemes/reviews.schema';
 import { ProductEntity } from '../schemes/products.schema';
 import { CreateReviewDto } from './dto/create-review.dto';
-import { AppError, AppErrorTypeEnum } from './../../../common/app-error';
+import { AppError, AppErrorTypeEnum } from './../../../../common/app-error';
 
 @Injectable()
 export class ReviewsService {
     constructor(
-        @InjectModel('ProductReviews')
+        @InjectModel('Reviews')
         readonly productReviewsModel: Model<ReviewsDocument>
     ) { }
 

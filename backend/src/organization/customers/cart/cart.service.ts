@@ -2,10 +2,10 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { CartDocument } from './schemas/cart.schema';
+import { CartDocument } from './schemes/cart.schema';
 import { CartProduct, CartProducts } from './dto/cart-product.dto';
 import { AppError, AppErrorTypeEnum } from './../../../common/app-error';
-import { ProductEntity } from '../products/schemas/products.schema';
+import { ProductEntity } from '../../menu/products/schemes/products.schema';
 
 @Injectable()
 export class CartService {

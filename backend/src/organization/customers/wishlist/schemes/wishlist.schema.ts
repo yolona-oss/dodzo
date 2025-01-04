@@ -16,10 +16,4 @@ export class WishlistEntity {
     products: mongoose.Schema.Types.ObjectId[];
 }
 
-const WishlistSchema = SchemaFactory.createForClass(WishlistEntity)
-
-WishlistSchema.virtual('id').get(function() {
-    return this._id.toHexString();
-})
-
-export { WishlistSchema }
+export const WishlistSchema = SchemaFactory.createForClass(WishlistEntity)

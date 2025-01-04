@@ -2,10 +2,10 @@ import { Controller, Param, Get, Put, Query, Res } from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
 import { Response } from 'express';
 
-import { ParseObjectIdPipe } from './../../common/pipes/parse-object-id.pipe';
+import { ParseObjectIdPipe } from './../../../common/pipes/parse-object-id.pipe';
 
-import { AuthUser } from './../../common/decorators/user.decorator';
-import { IJwtPayload } from 'auth/interfaces/jwt-payload.interface';
+import { AuthUser } from './../../../common/decorators/user.decorator';
+import { IJwtPayload } from '../../../auth/interfaces/jwt-payload.interface';
 
 @Controller()
 export class WishlistController {

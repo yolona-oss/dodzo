@@ -3,9 +3,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { WishlistService } from './wishlist.service';
 import { WishlistController } from './wishlist.controller';
-import { WishlistSchema } from './schemas/wishlist.schema';
-import { ProductSchema } from '../products/schemas/products.schema';
-import { UserSchema } from '../../users/schemas/user.schema';
+import { WishlistSchema } from './schemes/wishlist.schema';
+import { ProductSchema } from '../../menu/products/schemes/products.schema';
+import { UserSchema } from '../../../users/schemes/users.schema';
 
 @Module({
     imports: [

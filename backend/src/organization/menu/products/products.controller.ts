@@ -9,7 +9,7 @@ import {
     Controller,
     Post,
 } from '@nestjs/common';
-import { ParseObjectIdPipe } from './../../common/pipes/parse-object-id.pipe';
+import { ParseObjectIdPipe } from './../../../common/pipes/parse-object-id.pipe';
 import { Response } from 'express'
 
 import { ReviewsService } from './reviews/reviews.service';
@@ -18,11 +18,11 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductEntity } from './schemes/products.schema';
 
-import { Public } from './../../common/decorators/public.decorotor';
-import { Roles } from './../../common/decorators/role.decorator';
+import { Public } from './../../../common/decorators/public.decorotor';
+import { Roles } from './../../../common/decorators/role.decorator';
 
-import { Role } from './../../common/enums/role.enum';
-import { CreateReviewDto } from './reviews/dto/review.dto';
+import { Role } from './../../../common/enums/role.enum';
+import { CreateReviewDto } from './reviews/dto/create-review.dto';
 
 @Controller()
 export class ProductsController {

@@ -4,16 +4,16 @@ import { Injectable } from '@nestjs/common';
 import { CategoryDocument } from './schemas/category.schema';
 import { SubCategoryDocument } from './schemas/sub-category.schema';
 
-import { ImageUploadService } from './../../image-upload/image-upload.service';
-import { CRUDService } from './../../common/misc/crud-service';
+import { ImageUploadService } from './../../../common/image-upload/image-upload.service';
+import { CRUDService } from './../../../common/misc/crud-service';
 
 import { FilteringCategoryOptions } from './interfaces/filtring-category-options.interface';
-import { FiltredCategoryList } from './interfaces/filtred-category-list.interface';
 
-import { AppError, AppErrorTypeEnum } from './../../common/app-error';
+import { AppError, AppErrorTypeEnum } from './../../../common/app-error';
+import { LimitedOutput } from '../../../common/interfaces/limited-output.interface';
 
-import { OPQBuilder } from './../../common/misc/opq-builder';
-import { DeepPartial } from './../../common/types/deep-partial.type';
+import { OPQBuilder } from './../../../common/misc/opq-builder';
+import { DeepPartial } from './../../../common/types/deep-partial.type';
 
 @Injectable()
 export class CategoryService extends CRUDService<CategoryDocument> {
@@ -27,7 +27,7 @@ export class CategoryService extends CRUDService<CategoryDocument> {
         super(categoryModel)
     }
 
-    async findFiltredWrapper(opts: FilteringCategoryOptions): Promise<FiltredCategoryList> {
+    async findFiltredWrapper(opts: FilteringCategoryOptions): Promise<LimitedOutput<CategoryDocument>> {
         const page: number = opts.page ? parseInt(opts.page) : 1
         const perPage = opts.perPage ? parseInt(opts.perPage) : undefined
 
@@ -36,9 +36,9 @@ export class CategoryService extends CRUDService<CategoryDocument> {
 
         if (totalDocuments === 0) {
             return {
-                categoryList: [],
-                totalPages: 0,
-                page: 0
+                data: [],
+                offset: 0,
+                limit: 0
             }
         }
 
@@ -58,9 +58,9 @@ export class CategoryService extends CRUDService<CategoryDocument> {
         }
 
         return {
-            categoryList: docs,
-            totalPages: totalPages,
-            page: page
+            data: docs,
+            limit: totalPages,
+            offset: page
         }
     }
 

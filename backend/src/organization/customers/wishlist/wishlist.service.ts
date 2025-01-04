@@ -4,11 +4,11 @@ import mongoose, { Model } from 'mongoose';
 
 import { FindInListQuery } from './interfaces/find-query.interface';
 //import { AddToListQuery, RemoveFromListQuery } from './interfaces/list-operation-query.interface';
-import { OPQBuilder } from './../../common/misc/opq-builder';
+import { OPQBuilder } from './../../../common/misc/opq-builder';
 
-import { WishlistDocument } from './schemas/wishlist.schema';
+import { WishlistDocument } from './schemes/wishlist.schema';
 
-import { AppError, AppErrorTypeEnum } from './../../common/app-error';
+import { AppError, AppErrorTypeEnum } from './../../../common/app-error';
 
 
 @Injectable()

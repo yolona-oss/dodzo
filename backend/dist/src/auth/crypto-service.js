@@ -10,11 +10,11 @@ var AlphabetOrderType;
     AlphabetOrderType[AlphabetOrderType["SpecialCharacter"] = 3] = "SpecialCharacter";
 })(AlphabetOrderType || (AlphabetOrderType = {}));
 const CryptoService = (() => {
-    const createPasswordHash = (password) => {
-        return crypto_1.default.createHmac('sha256', password).digest('hex');
+    const createPasswordHash = (plain) => {
+        return crypto_1.default.createHmac('sha256', plain).digest('hex');
     };
-    const comparePasswords = (password, hash) => {
-        return createPasswordHash(password) == hash;
+    const comparePasswords = (plain, hash) => {
+        return createPasswordHash(plain) == hash;
     };
     const createResetToken = () => {
         const resetTokenValue = crypto_1.default.randomBytes(20).toString("base64url");

@@ -16,12 +16,15 @@ import {
 } from './../common/constants';
 
 import { Role } from './../common/enums/role.enum';
-import { WishlistService } from '../market/wishlist/wishlist.service';
-import { CartService } from '../market/cart/cart.service';
-import { OrdersService } from '../market/orders/orders.service';
-import { ImageUploadService } from './../image-upload/image-upload.service';
-import { ImagesEntity } from './../image-upload/schemas/image-upload.schema';
+import { WishlistService } from '../organization/customers/wishlist/wishlist.service';
+import { CartService } from '../organization/customers/cart/cart.service';
+import { OrdersService } from '../organization/customers/orders/orders.service';
+
+import { ImageUploadService } from './../common/image-upload/image-upload.service';
+import { ImagesEntity } from './../common/image-upload/schemas/image-upload.schema';
+
 import { UpdateUserDto } from './dto/update-user.dto';
+
 import { Writeable } from './../common/types/writable.type';
 
 @Injectable()
@@ -285,33 +288,6 @@ export class UsersService {
         }
     }
 
-    async __createDefaultAdmin(user: CreateUserDto) {
-        const defaultUser = await this.findByEmail(user.email)
-        if (!defaultUser) {
-            try {
-                const initUser = await this.usersModel.create({
-                    ...user,
-                    password: Crypto.createPasswordHash(user.password),
-                    roles: [Role.Admin]
-                })
-                const pre = await this.preCreate(initUser.id)
-
-                await this.usersModel.findByIdAndUpdate(initUser.id, {
-                    $set: {
-                        wishlist: pre.wishlist,
-                        cart: pre.cart
-                    }
-                }, {new: true})
-            } catch (e) {
-                console.error(e)
-                throw new AppError(AppErrorTypeEnum.DB_CANNOT_CREATE, {
-                    errorMessage: "Cannot create default admin",
-                    userMessage: "Cannot create default admin"
-                })
-            }
-        }
-    }
-
     private checkPasswordStrenth(password: string) {
         if (password.length < MIN_USER_PASSWORD_LENGTH) {
             throw new AppError(AppErrorTypeEnum.INSUFFICIENT_USER_PASSWORD_LENGTH, {
@@ -364,5 +340,37 @@ export class UsersService {
 
     private async _removeOrders(id: string) {
         return await this.ordersService.removeUserOrders(id)
+    }
+
+    async __createDefaultAdmin(user: CreateUserDto) {
+        let defaultUser
+        try {
+            defaultUser = await this.findByEmail(user.email)
+        } catch(e) {
+            defaultUser = null
+        }
+        if (!defaultUser) {
+            try {
+                const initUser = await this.usersModel.create({
+                    ...user,
+                    password: Crypto.createPasswordHash(user.password),
+                    roles: [Role.Admin]
+                })
+                const pre = await this.preCreate(initUser.id)
+
+                await this.usersModel.findByIdAndUpdate(initUser.id, {
+                    $set: {
+                        wishlist: pre.wishlist,
+                        cart: pre.cart
+                    }
+                }, {new: true})
+            } catch (e) {
+                console.error(e)
+                throw new AppError(AppErrorTypeEnum.DB_CANNOT_CREATE, {
+                    errorMessage: "Cannot create default admin",
+                    userMessage: "Cannot create default admin"
+                })
+            }
+        }
     }
 }

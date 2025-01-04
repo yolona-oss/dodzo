@@ -1,21 +1,22 @@
 import mongoose, { Model, FilterQuery, isValidObjectId } from 'mongoose'
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CategoryService } from './../category/category.service';
-import { ImageUploadService } from './../../image-upload/image-upload.service';
 
-import { AppError, AppErrorTypeEnum } from './../../common/app-error';
+import { CategoryService } from './../category/category.service';
+import { ImageUploadService } from './../../../common/image-upload/image-upload.service';
+
+import { AppError, AppErrorTypeEnum } from './../../../common/app-error';
 
 import { CreateProductDto } from './dto/create-product.dto';
 
-import { ProductDocument } from './schemas/products.schema';
-import { ProductEntity } from './schemas/products.schema';
+import { ProductDocument } from './schemes/products.schema';
+import { ProductEntity } from './schemes/products.schema';
 
-import { OPQBuilder } from './../../common/misc/opq-builder';
+import { OPQBuilder } from './../../../common/misc/opq-builder';
 import { FilteringOptions } from './interfaces/filtering-options.interface';
-import { FiltredProducts } from './interfaces/filtred-products.interface';
 
-import { DeepPartial } from './../../common/types/deep-partial.type';
+import { DeepPartial } from './../../../common/types/deep-partial.type';
+import { LimitedOutput } from '../../../common/interfaces/limited-output.interface'
 
 @Injectable()
 export class ProductsService {
@@ -53,7 +54,7 @@ export class ProductsService {
                 .exec())
     }
 
-    async findFiltred(opts: FilteringOptions): Promise<FiltredProducts> {
+    async findFiltred(opts: FilteringOptions): Promise<LimitedOutput<ProductDocument>> {
         const page: number = opts.page ? parseInt(opts.page) : 1
         const perPage = opts.perPage ? parseInt(opts.perPage) : undefined
 
@@ -62,9 +63,9 @@ export class ProductsService {
 
         if (totalDocuments === 0) {
             return {
-                products: [],
-                totalPages: 0,
-                page: 0
+                data: [],
+                limit: 0,
+                offset: 0
             }
         }
 
@@ -78,14 +79,11 @@ export class ProductsService {
             .addValidatorForKey("isFeatured", (v) => (v === 'true' || v === 'false'))
             .addToQuery("price", opts.minPrice, (v) => { return { $gte: parseInt(v) } })
             .addToQuery("price", opts.maxPrice, (v) => { return { $lte: parseInt(v) } })
-            .addToQuery("rating", opts.rating)
             .addToQuery("category", opts.category)
             .addToQuery("subCategory", opts.subCategory)
-            .addToQuery("location", opts.location, (v) => { return v === "All" ? "" : v })
-            .addToQuery("isFeatured", opts.isFeatured, (v) => Boolean(v))
             .build()
 
-        console.log("Builded Query: " + JSON.stringify(query, null, 4))
+        //console.log("Builded Query: " + JSON.stringify(query, null, 4))
 
         const docs = await this.model.find(query, null, { skip: (page - 1) * (perPage || 0), limit: perPage })
             .populate('images')
@@ -93,9 +91,9 @@ export class ProductsService {
             .populate('subCategory').exec()
 
         return {
-            products: docs,
-            totalPages: totalPages,
-            page: page
+            data: docs,
+            limit: totalPages,
+            offset: page
         }
     }
 

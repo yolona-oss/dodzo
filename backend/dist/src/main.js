@@ -24,8 +24,8 @@ async function bootstrap() {
     app.useGlobalFilters(new all_exception_filter_1.AllExeptionFilter());
     app.enableCors(cors_1.corsOptions);
     const config = new swagger_1.DocumentBuilder()
-        .setTitle('Spice API')
-        .setDescription('Spice API description')
+        .setTitle('docs title')
+        .setDescription('docs decription')
         .setVersion('1.0')
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);

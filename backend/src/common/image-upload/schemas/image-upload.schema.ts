@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 export type ImagesDocument = ImagesEntity & Document;
 
@@ -9,8 +9,6 @@ export type ImagesDocument = ImagesEntity & Document;
     }
 })
 export class ImagesEntity {
-    id: string
-
     /***
     * Using for accosiate with pre uploaded images.
     * Like default profile image for user or default image for product.
@@ -18,20 +16,19 @@ export class ImagesEntity {
     @Prop({type: String, required: false, unique: true})
     blankType?: string;
 
-    @Prop({type: String, default: "common image"})
-    name?: string;
+    @Prop({type: String, required: true})
+    uploader: string;
 
-    @Prop({type: String, default: "common image description"})
-    description?: string;
+    @Prop({type: mongoose.Schema.Types.Mixed, required: false})
+    uploaderData?: any
+
+    @Prop({type: String, default: "image"})
+    alt?: string;
 
     @Prop({type: String, required: true})
-    imageUrl: string;
+    url: string;
 }
 
 const ImagesSchema = SchemaFactory.createForClass(ImagesEntity);
-
-ImagesSchema.virtual('id').get(function() {
-    return this._id.toHexString();
-})
 
 export { ImagesSchema }

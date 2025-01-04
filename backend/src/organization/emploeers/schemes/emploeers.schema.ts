@@ -33,3 +33,5 @@ export class EmploeerEntity {
     }, required: true})
     schedule: ISchedule
 }
+
+export const EmploeerSchema = SchemaFactory.createForClass(EmploeerEntity);

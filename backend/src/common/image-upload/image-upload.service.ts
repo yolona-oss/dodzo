@@ -3,8 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as fs from 'fs'
 
-import { CloudinaryService } from './../cloudinary/cloudinary.service';
-
 import { ImagesDocument } from './schemas/image-upload.schema';
 
 import { CRUDService } from './../misc/crud-service';
@@ -12,40 +10,77 @@ import { AppError, AppErrorTypeEnum } from './../app-error';
 import { extractFileName } from './../misc/utils';
 import { DefaultImages, DefaultImagesType } from './../enums/default-images.enum';
 import { BlankImagesPath } from './interfaces/blank-images-path.dto';
+import { LocalUploadStrategy } from './strategies/local.strategy';
+import { ImageUploadStrategy } from 'common/misc/image-upload-strategy';
 
 @Injectable()
 export class ImageUploadService extends CRUDService<ImagesDocument> {
+    private readonly uploaders: ImageUploadStrategy[] = []
+    private currentUploader: string = ""
+
     constructor(
         @InjectModel('Images')
         private imagesModel: Model<ImagesDocument>,
-        private readonly cloudinaryService: CloudinaryService
     ) {
         super(imagesModel)
+        const localStrat = new LocalUploadStrategy()
+        this.uploaders.push(
+            localStrat
+        )
+        this.currentUploader = localStrat.apiName
+    }
+
+    private async uploadFile(file: Express.Multer.File) {
+        const selectedUploader = this.uploaders.find(uploader => uploader.apiName === this.currentUploader)
+        if (!selectedUploader) {
+            throw new AppError(AppErrorTypeEnum.CANNOT_UPLOAD_IMAGE, {
+                errorMessage: "Selected uploader not found"
+            })
+        }
+        return await selectedUploader.uploadFile(file)
+    }
+
+    private async destroyFile(doc: ImagesDocument) {
+        const selectedUploader = this.uploaders.find(uploader => uploader.apiName === doc.uploader)
+        if (!selectedUploader) {
+            throw new AppError(AppErrorTypeEnum.CANNOT_UPLOAD_IMAGE, {
+                errorMessage: "Selected uploader not found"
+            })
+        }
+
+        return await selectedUploader.destroyFile(doc.uploaderData)
     }
 
     /***
      * Upload images to cloudinary and save them to db
      */
-    async uploadImages(files: {path: string, filename: string}[], blankType?: DefaultImagesType) {
-        const cloudinaryUploadedUrls = new Array<string>;
+    async uploadImages(files: Express.Multer.File[]) {
         const imageDocs = new Array<ImagesDocument>;
-
-        const cloudinaryUploadOptions = {
-            use_filename: true,
-            unique_filename: false,
-            overwrite: false,
-        };
 
         for (const file of files) {
             try {
-                const uploadedFile = await this.cloudinaryService.uploadFile(file.path, cloudinaryUploadOptions);
-                cloudinaryUploadedUrls.push(uploadedFile.secure_url)
-                imageDocs.push(await super.createDocument({imageUrl: uploadedFile.secure_url, blankType: blankType}))
-            } finally {
-                if (!blankType) {
+                // upload
+                const processed = await this.uploadFile(file)
+
+                if (processed.error) {
                     fs.unlinkSync(file.path)
+                    throw new AppError(AppErrorTypeEnum.CANNOT_UPLOAD_IMAGE, {
+                        errorMessage: processed.error
+                    })
                 }
-            }
+
+                imageDocs.push(
+                    await super.createDocument({
+                        url: processed.target,
+                        uploader: this.currentUploader,
+                        uploaderData: processed.uploaderData
+                    })
+                )
+            } catch(e) {
+                fs.unlinkSync(file.path)
+                throw e
+            } finally {
+            } 
         }
 
         return imageDocs
@@ -67,7 +102,11 @@ export class ImageUploadService extends CRUDService<ImagesDocument> {
 
     override async removeDocumentById(id: string) {
         const imageDoc = await super.getDocumentById(id)
-        await this.cloudinaryService.destroyFile(extractFileName(imageDoc.imageUrl))
+
+        if (!imageDoc) {
+            throw new AppError(AppErrorTypeEnum.DB_ENTITY_NOT_FOUND)
+        }
+        await this.destroyFile(imageDoc)
 
         return await super.removeDocumentById(id)
     }
@@ -83,12 +122,10 @@ export class ImageUploadService extends CRUDService<ImagesDocument> {
         if (!images) {
             throw new AppError(AppErrorTypeEnum.DB_ENTITY_NOT_FOUND)
         }
-        const cloudinaryIds = images.map(image => extractFileName(image.imageUrl))
 
         for (let i = 0; i < images.length; ++i) {
-            await this.cloudinaryService.destroyFile(cloudinaryIds[i])
+            await this.destroyFile(images[i])
             await this.removeDocumentById(ids[i])
-            //await Promise.all([ ])
         }
     }
 
@@ -99,7 +136,7 @@ export class ImageUploadService extends CRUDService<ImagesDocument> {
         }
 
         for (const doc of docs) {
-            if (doc.imageUrl == url) {
+            if (doc.url == url) {
                 return doc
             }
         }
@@ -114,6 +151,22 @@ export class ImageUploadService extends CRUDService<ImagesDocument> {
         return super.createDocument(data)
     }
 
+    private async uploadDefaultBlack(file: { path: string, filename: string }, type: DefaultImagesType) {
+        const processed = await this.uploadFile(file as Express.Multer.File)
+        if (processed.error) {
+            throw new AppError(AppErrorTypeEnum.CANNOT_UPLOAD_IMAGE, {
+                errorMessage: processed.error
+            })
+        }
+
+        await this.imagesModel.create({
+            url: processed.target,
+            uploader: this.currentUploader,
+            uploaderData: processed.uploaderData,
+            blankType: type
+        })
+    }
+
     async __createDefaultBlankImages(localPaths: BlankImagesPath[]): Promise<void> {
         for (const type in DefaultImages) {
             const isBlankExists = await this.imagesModel.find({ blankType: type })
@@ -121,14 +174,15 @@ export class ImageUploadService extends CRUDService<ImagesDocument> {
                 continue
             }
 
-            const fileToUpload = localPaths.filter(path => path.type == type)
-                .map(path => {
-                    return {
-                        path: path.path,
-                        filename: extractFileName(path.path, false)
-                    }
-                })
-            await this.uploadImages(fileToUpload, type as DefaultImagesType)
+            const fileToUpload = localPaths.filter(path => path.type == type).map(path => {
+                return {
+                    path: path.path,
+                    filename: extractFileName(path.path, false)
+                }
+            })
+            for (let i = 0; i < fileToUpload.length; ++i) {
+                await this.uploadDefaultBlack(fileToUpload[i], type as DefaultImagesType)
+            }
         }
     }
 }

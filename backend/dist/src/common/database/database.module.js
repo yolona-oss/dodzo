@@ -12,8 +12,8 @@ DatabaseModule = tslib_1.__decorate([
         imports: [
             mongoose_1.MongooseModule.forRootAsync({
                 useFactory: (configService) => ({
-                    uri: configService.get("database.connection_string"),
-                    dbName: configService.get("database.name"),
+                    uri: configService.getOrThrow("database.connection_string"),
+                    dbName: configService.getOrThrow("database.name"),
                 }),
                 inject: [config_1.ConfigService],
             })

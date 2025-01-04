@@ -13,7 +13,7 @@ let AuthController = class AuthController {
     async signin({ email, password }, response) {
         const authResponse = await this.authService.signin(email, password);
         response.cookie(constants_1.REFRESH_TOKEN.cookie.name, authResponse.refresh_token, constants_1.REFRESH_TOKEN.cookie.options);
-        response.json(authResponse);
+        response.status(201).json(authResponse);
     }
     async signup(userDto, response) {
         const authResponse = await this.authService.signup(userDto);
@@ -64,7 +64,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:returntype", Promise)
 ], AuthController.prototype, "signup", null);
 tslib_1.__decorate([
-    (0, common_1.Post)('/reauth'),
+    (0, common_1.Post)('/refresh'),
     tslib_1.__param(0, (0, common_1.Req)()),
     tslib_1.__param(1, (0, common_1.Res)()),
     tslib_1.__metadata("design:type", Function),
@@ -81,7 +81,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:returntype", Promise)
 ], AuthController.prototype, "logout", null);
 tslib_1.__decorate([
-    (0, common_1.Post)('/logout-all'),
+    (0, common_1.Post)('/master-logout'),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", []),
     tslib_1.__metadata("design:returntype", Promise)

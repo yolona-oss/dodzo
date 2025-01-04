@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class MenuService {
+export class DeliveryService {
+    constructor() { }
 }

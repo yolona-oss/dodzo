@@ -4,18 +4,18 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { CartService } from '../cart/cart.service';
 
-import { OrdersDocument } from './schemas/orders.schema';
+import { OrdersDocument } from './schemes/orders.schema';
 
-import { AppError, AppErrorTypeEnum } from './../../common/app-error';
+import { AppError, AppErrorTypeEnum } from './../../../common/app-error';
 import { CartProducts } from '../cart/dto/cart-product.dto';
-import { OrderStatus } from './../../common/enums/order-status.enum';
-import { ProductEntity } from '../products/schemas/products.schema';
+import { OrderStatus } from './../../../common/enums/order-status.enum';
+import { ProductEntity } from '../../menu/products/schemes/products.schema';
 import { PopulateProductInterface } from './interfaces/populate-product.interface';
-import { OPQBuilder } from './../../common/misc/opq-builder';
+import { OPQBuilder } from './../../../common/misc/opq-builder';
 import { PaymentDetailsDto } from './dto/payment-details.dto';
 
 import { FilteringOptions } from './interfaces/filtering-options.interface';
-import { FiltredOrders } from './interfaces/filtered-orders.interface';
+import { LimitedOutput } from '../../../common/interfaces/limited-output.interface';
 
 @Injectable()
 export class OrdersService {
@@ -75,7 +75,7 @@ export class OrdersService {
         return orders
     }
 
-    async findFiltred(opts: FilteringOptions): Promise<FiltredOrders> {
+    async findFiltred(opts: FilteringOptions): Promise<LimitedOutput<OrdersDocument>> {
         const page: number = opts.page ? parseInt(opts.page) : 1
         const perPage = opts.perPage ? parseInt(opts.perPage) : undefined
 
@@ -84,9 +84,9 @@ export class OrdersService {
 
         if (totalDocuments === 0) {
             return {
-                orders: [],
-                totalPages: 0,
-                page: 0
+                data: [],
+                limit: 0,
+                offset: 0
             }
         }
 
@@ -113,9 +113,10 @@ export class OrdersService {
             .exec()
 
         return {
-            orders,
-            totalPages,
-            page
+            // @ts-ignore
+            data: orders,
+            limit: perPage || 0,
+            offset: (page - 1) * (perPage || 0)
         }
     }
 
@@ -212,7 +213,7 @@ export class OrdersService {
 
         const cartProducts = cart.products.map((item) => {
             return {
-                product: <string>item.product.id,
+                product: <string>item.product._id,
                 quantity: item.quantity
             }
         })

@@ -5,8 +5,6 @@ import path from 'path'
 
 import { ImageUploadService } from './image-upload.service';
 
-import { CloudinaryModule } from './../cloudinary/cloudinary.module';
-
 import { ImageUploadController } from './image-upload.controller';
 import { ImagesSchema } from './schemas/image-upload.schema'
 
@@ -17,7 +15,6 @@ import { DefaultImagesType } from './../enums/default-images.enum'
         MongooseModule.forFeature([
             { name: 'Images', schema: ImagesSchema }
         ]),
-        CloudinaryModule
     ],
     providers: [ImageUploadService],
     controllers: [ImageUploadController],
